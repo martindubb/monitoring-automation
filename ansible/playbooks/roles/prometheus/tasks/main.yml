@@ -31,6 +31,16 @@
     src: files/prometheus.yml
     dest: "/usr/local/bin/prometheus/prometheus.yml"
 
+- name: copy alert file
+  ansible.builtin.copy:
+    src: files/prometheus.yml
+    dest: "/usr/local/bin/prometheus/my-rules.yml"
+
+- name: copy alert file 2
+  ansible.builtin.copy:
+    src: files/prometheus.yml
+    dest: "/usr/local/bin/prometheus/node_exporter.rules.yml"
+
 - name: create service file
   copy:
     dest: "/etc/systemd/system/prometheus.service"
