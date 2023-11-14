@@ -15,4 +15,4 @@ inhibit_rules:
       severity: 'critical'
     target_match:
       severity: 'warning'
-    equal: ['alertname', 'dev', 'instance']terraform.tfstate.backup 
+    equal: ['alertname', 'dev', 'instance']
