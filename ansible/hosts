@@ -1,3 +1,3 @@
-prometheus ansible_host=18.185.91.251 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/martindubb/.ssh/playground
+prometheus ansible_host=3.79.62.181 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/martindubb/.ssh/playground
 
-exporter ansible_host=52.58.27.111 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/martindubb/.ssh/playground
+exporter ansible_host=52.28.235.104 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/martindubb/.ssh/playground

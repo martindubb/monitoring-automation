@@ -6,29 +6,29 @@
     state: latest
 
 - name: create directory
-  file:
+  ansible.builtin.file:
     path: /home/ubuntu/node_exporter
     state: directory
 
 - name: download node exporter
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz"
     dest: "/home/ubuntu/node_exporter/node_exporter-1.6.1.linux-amd64.tar.gz"
 
 - name: unpack installation files
-  unarchive:
+  ansible.builtin.unarchive:
     src: "/home/ubuntu/node_exporter/node_exporter-1.6.1.linux-amd64.tar.gz"
     dest: "/home/ubuntu/node_exporter"
     remote_src: yes
 
 - name: move files
-  copy:
+  ansible.builtin.copy:
     src: "/home/ubuntu/node_exporter/node_exporter-1.6.1.linux-amd64/"
     dest: "/usr/local/bin/node_exporter/"
     remote_src: yes
 
 - name: create service file
-  copy:
+  ansible.builtin.copy:
     dest: "/etc/systemd/system/node_exporter.service"
     content: |
       [Unit]
@@ -43,7 +43,7 @@
       WantedBy=multi-user.target
 
 - name: service always started
-  systemd:
+  ansible.builtin.systemd:
     name: node_exporter
     state: started
     enabled: true

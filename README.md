@@ -1,16 +1,16 @@
 # Freitag 10.11.2023
 
-Bei Übung 133 bauen wir auf dem Stand von Übung 132 auf. Wir haben die Musterlösung genommen und einige Änderungen vorgenommen und sie auch erweitert.
+Bei Übung 133 bauen wir auf dem Stand von Übung 132 auf. Wir haben die Musterlösung von hier[https://github.com/MTeeeee/teaching/tree/main/Monitoring/Grafana_Prometheus] genommen und einige Änderungen vorgenommen und sie auch erweitert.
 
 ## Änderungen Terraform
 
-- eingecheckten State gelöscht: wir arbeiten auf unseren eigenen accounts in aws, daher wollen wir ein frischen state generieren.
+- eingecheckten State gelöscht: wir arbeiten auf unseren eigenen Accounts in aws, daher wollen wir ein frischen eigenen State generieren.
 - Variablen angepasst:
-  - `dev_vars.auto.tfvars`: profilname auf das profil der awscli angepasst
-  - `ec2.tf`: variable `key` definiert, um den default-Wert im Modul zu überschreiben. Wert der Variable ist der NAme des SSH-Keys, welcher bereits in aws gespeichert ist. 
+  - `dev_vars.auto.tfvars`: Profilname auf das Profil der awscli angepasst
+  - `ec2.tf`: Variable `key` definiert, um den default-Wert im Modul zu überschreiben. Wert der Variable ist der Name des SSH-Keys, welcher bereits in aws gespeichert ist.
 - Im Modul `ec2` haben wir die Security Group angepasst:
   - Port von Grafana auf 3000 gesetzt
-  - Ingress-Rule für Alertmanager Port 9093 hinzugefügt. 
+  - Ingress-Rule für Alertmanager Port 9093 hinzugefügt.
 
 Danach konnte die Terraform Configuration in aws ohne Fehler deployed werden.
 
@@ -23,7 +23,7 @@ Dann konnten wir Prometheus deployen.
 
 - Für das Grafana Deployment haben wir in der Grafana Config `grafana.ini` den Port auf 3000 gesetzt.
 
-Dann konnten wir Grafana deployen.
+Dann konnten wir auch Grafana deployen.
 
 Beim Node Exporter haben wir nichts geändert, den konnten wir auch direkt so deployen.
 

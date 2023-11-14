@@ -5,29 +5,29 @@
     state: latest
 
 - name: create directory
-  file:
+  ansible.builtin.file:
     path: /home/ubuntu/alertmanager
     state: directory
 
 - name: download alertmanager tarball
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/prometheus/alertmanager/releases/download/v0.26.0/alertmanager-0.26.0.linux-amd64.tar.gz"
     dest: "/home/ubuntu/alertmanager/alertmanager-0.26.0.linux-amd64.tar.gz"
 
 - name: unpack installation files
-  unarchive:
+  ansible.builtin.unarchive:
     src: "/home/ubuntu/alertmanager/alertmanager-0.26.0.linux-amd64.tar.gz"
     dest: "/home/ubuntu/alertmanager"
     remote_src: yes
 
 - name: move files
-  copy:
+  ansible.builtin.copy:
     src: "/home/ubuntu/alertmanager/alertmanager-0.26.0.linux-amd64/"
     dest: "/usr/local/bin/alertmanager/"
     remote_src: yes
 
 - name: create service file
-  copy:
+  ansible.builtin.copy:
     dest: "/etc/systemd/system/alertmanager.service"
     content: |
       [Unit]
@@ -42,7 +42,7 @@
       WantedBy=multi-user.target
 
 - name: service always started
-  systemd:
+  ansible.builtin.systemd:
     name: alertmanager
     state: restarted
     enabled: true

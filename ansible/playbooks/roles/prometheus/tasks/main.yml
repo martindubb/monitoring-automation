@@ -5,23 +5,23 @@
     state: latest
 
 - name: create directory
-  file:
+  ansible.builtin.file:
     path: /home/ubuntu/prometheus
     state: directory
 
 - name: download prometheus
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/prometheus/prometheus/releases/download/v2.47.2/prometheus-2.47.2.linux-amd64.tar.gz"
     dest: "/home/ubuntu/prometheus/prometheus-2.47.2.linux-amd64.tar.gz"
 
 - name: unpack installation files
-  unarchive:
+  ansible.builtin.unarchive:
     src: "/home/ubuntu/prometheus/prometheus-2.47.2.linux-amd64.tar.gz"
     dest: "/home/ubuntu/prometheus"
     remote_src: yes
 
 - name: move files
-  copy:
+  ansible.builtin.copy:
     src: "/home/ubuntu/prometheus/prometheus-2.47.2.linux-amd64/"
     dest: "/usr/local/bin/prometheus/"
     remote_src: yes
@@ -32,7 +32,7 @@
     dest: "/usr/local/bin/prometheus/prometheus.yml"
 
 - name: create service file
-  copy:
+  ansible.builtin.copy:
     dest: "/etc/systemd/system/prometheus.service"
     content: |
       [Unit]
@@ -47,7 +47,7 @@
       WantedBy=multi-user.target
 
 - name: service always restarted
-  systemd:
+  ansible.builtin.systemd:
     name: prometheus
     state: restarted
     enabled: true
