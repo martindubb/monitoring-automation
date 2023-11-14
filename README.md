@@ -47,3 +47,14 @@ Was nun noch fehlt (Hausaufgabe bzw. arbeiten wir da am Montag weiter dran):
 - Testen des Alerting-Systems
 - Integration in Grafana
 - Alertmanager schickt Benachrichtigungen
+
+# Montag 13.11.2023
+
+Heute haben wir hier weiter gemacht. Zunächst haben wir Alert-Rules erstellt und diese in der Datei `my-rules.yml` gespeichert. Zusätzlich haben wir von hier[https://samber.github.io/awesome-prometheus-alerts/rules#host-and-hardware] Alert-Rules für den node_exporter angeschaut und implementiert.
+
+Das Konstrukt haben wir dann getestet. Wir haben den node_exporter auf dem zweiten Host abgeschalten, was von Prometheus schnell bemerkt wurde. Der Alert `InstanceDown` wurde getriggert und kam beim Alertmanager an.
+
+Wir wollten und vom Alertmanager benachrichtigen lassen. Dazu haben wir in AWS ein neues SNS Topic angelegt. Zusätzlich haben wir dieses Topic per Mail abonniert, sodass Nachrichten in diesem Topic uns per Mail zugeschickt werden. Im Alertmanager haben wir noch die Route für die Alerts so eingestellt, dass die Alerts un diesem SNS Topic veröffentlicht werden. Um das möglich zu machen mussten wir die Alertmanager Config anpassen und die Systemd-Unit des Alertmanagers so anpassen, dass unsere Credentials aus einer Datei mit Umgebungsvariablen gelesen werden.
+
+Zusätzlich haben wir zwischendurch noch in Grafana geschaut. Hier haben wir ein Dashboard für den node_exporter importiert (Node Exporter Full; ID 1860), welches uns detaillierte Einblicke zu den Hosts geben konnte. Das Dashboard haben wir von hier: https://grafana.com/grafana/dashboards/
+Wir haben ebenfalls Dashboards für Prometheus und den Alertmanager importiert, welche Daten zu den beiden Systemen visualisiert.

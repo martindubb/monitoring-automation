@@ -37,9 +37,23 @@
       [Service]
       Type=simple
       ExecStart=/usr/local/bin/alertmanager/alertmanager --config.file=/usr/local/bin/alertmanager/alertmanager.yml
+      EnvironmentFile=/usr/local/bin/alertmanager/alertmanager.env
 
       [Install]
       WantedBy=multi-user.target
+
+- name: create env file
+  ansible.builtin.copy:
+    dest: "/usr/local/bin/alertmanager/alertmanager.env"
+    content: |
+      AWS_ACCESS_KEY_ID=ASIA3XEMT[...]
+      AWS_SECRET_ACCESS_KEY=DRcUKdp[...]
+      AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjE[...]
+
+- name: copy alertmanager config file
+  ansible.builtin.copy:
+    src: files/alertmanager.yml
+    dest: "/usr/local/bin/alertmanager/alertmanager.yml"
 
 - name: service always started
   ansible.builtin.systemd:
