@@ -1,0 +1,4 @@
+prometheus_version: 2.47.2
+alertmanager_version: 0.26.0
+alertmanager_region: eu-central-1
+alertmanager_topic_arn: arn:aws:sns:eu-central-1:805601245952:prometheus-alerts

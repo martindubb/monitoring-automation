@@ -1,33 +1,34 @@
 ---
-
 - name: Update all packages
   ansible.builtin.apt:
     name: "*"
     state: latest
+    update_cache: yes
 
-- name: create directory
+- name: create download  directory
   ansible.builtin.file:
-    path: /home/ubuntu/node_exporter
+    path: "{{ download_path }}/node_exporter"
     state: directory
 
-- name: download node exporter
+- name: download node_exporter archive
   ansible.builtin.get_url:
-    url: "https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz"
-    dest: "/home/ubuntu/node_exporter/node_exporter-1.6.1.linux-amd64.tar.gz"
+    url: "https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "{{ download_path }}/node_exporter/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
 
-- name: unpack installation files
+- name: unpack node_exporter archive
   ansible.builtin.unarchive:
-    src: "/home/ubuntu/node_exporter/node_exporter-1.6.1.linux-amd64.tar.gz"
-    dest: "/home/ubuntu/node_exporter"
+    src: "{{ download_path }}/node_exporter/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "{{ download_path }}/node_exporter"
     remote_src: yes
 
-- name: move files
+- name: move node_exporter files
   ansible.builtin.copy:
-    src: "/home/ubuntu/node_exporter/node_exporter-1.6.1.linux-amd64/"
-    dest: "/usr/local/bin/node_exporter/"
+    src: "{{ download_path }}/node_exporter/node_exporter-{{ node_exporter_version }}.linux-amd64/"
+    dest: "{{ destination_path }}/node_exporter"
     remote_src: yes
+  notify: restart node_exporter service
 
-- name: create service file
+- name: create node_exporter service file
   ansible.builtin.copy:
     dest: "/etc/systemd/system/node_exporter.service"
     content: |
@@ -37,13 +38,13 @@
 
       [Service]
       Type=simple
-      ExecStart=/usr/local/bin/node_exporter/node_exporter
+      ExecStart={{ destination_path }}/node_exporter/node_exporter
 
       [Install]
       WantedBy=multi-user.target
+  notify: restart node_exporter service
 
-- name: service always started
+- name: start node_exporter service
   ansible.builtin.systemd:
     name: node_exporter
     state: started
-    enabled: true
