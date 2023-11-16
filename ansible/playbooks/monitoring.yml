@@ -1,8 +1,8 @@
 ---
-- name: Grafana & Prometheus
+- name: Grafana, Prometheus, Alertmanager
   hosts: prometheus
   roles: 
   - prometheus
-  - grafana
   - alertmanager
+  - grafana
   become: true

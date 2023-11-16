@@ -8,8 +8,8 @@ receivers:
   - name: 'aws.sns'
     sns_configs:
     - sigv4:
-        region: eu-central-1
-      topic_arn: arn:aws:sns:eu-central-1:805601245952:prometheus-alerts
+        region: "{{ alertmanager_region }}"
+      topic_arn: "{{ alertmanager_topic_arn }}"
 inhibit_rules:
   - source_match:
       severity: 'critical'

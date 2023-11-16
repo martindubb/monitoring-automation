@@ -1,0 +1,7 @@
+---
+ansible_user: ubuntu 
+ansible_ssh_private_key_file: /path/to/ssh/keyfile
+
+download_path: "/home/{{ ansible_user }}"
+destination_path: "/usr/local/bin"
+node_exporter_version: 1.6.1

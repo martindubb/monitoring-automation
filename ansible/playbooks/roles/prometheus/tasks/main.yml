@@ -4,42 +4,43 @@
     name: "*"
     state: latest
 
-- name: create directory
+- name: create download directory
   ansible.builtin.file:
-    path: /home/ubuntu/prometheus
+    path: "{{ download_path }}/prometheus"
     state: directory
 
-- name: download prometheus
+- name: download prometheus archive
   ansible.builtin.get_url:
-    url: "https://github.com/prometheus/prometheus/releases/download/v2.47.2/prometheus-2.47.2.linux-amd64.tar.gz"
-    dest: "/home/ubuntu/prometheus/prometheus-2.47.2.linux-amd64.tar.gz"
+    url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+    dest: "{{ download_path }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
 
-- name: unpack installation files
+- name: unpack prometheus archive
   ansible.builtin.unarchive:
-    src: "/home/ubuntu/prometheus/prometheus-2.47.2.linux-amd64.tar.gz"
-    dest: "/home/ubuntu/prometheus"
+    src: "{{ download_path }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+    dest: "{{ download_path }}/prometheus"
     remote_src: yes
 
-- name: move files
+- name: move prometheus files
   ansible.builtin.copy:
-    src: "/home/ubuntu/prometheus/prometheus-2.47.2.linux-amd64/"
-    dest: "/usr/local/bin/prometheus/"
+    src: "{{ download_path }}/prometheus/prometheus-{{ prometheus_version }}.linux-amd64/"
+    dest: "{{ destination_path }}/prometheus/"
     remote_src: yes
+  notify: restart prometheus service
 
-- name: copy config file
-  ansible.builtin.copy:
-    src: files/prometheus.yml
-    dest: "/usr/local/bin/prometheus/prometheus.yml"
+- name: template config file
+  ansible.builtin.template:
+    src: "templates/prometheus.yml"
+    dest: "{{ destination_path }}/prometheus/prometheus.yml"
+  notify: restart prometheus service
 
-- name: copy alert file
+- name: copy rules files
   ansible.builtin.copy:
-    src: files/my-rules.yml
-    dest: "/usr/local/bin/prometheus/my-rules.yml"
-
-- name: copy alert file 2
-  ansible.builtin.copy:
-    src: files/node_exporter.rules.yml
-    dest: "/usr/local/bin/prometheus/node-exporter.yml"
+    src: "files/{{ item }}"
+    dest: "{{ destination_path }}/prometheus/{{ item }}"
+  with_items: 
+  - my-rules.yml
+  - node_exporter.rules.yml
+  notify: restart prometheus service
 
 - name: create service file
   ansible.builtin.copy:
@@ -51,14 +52,13 @@
 
       [Service]
       Type=simple
-      ExecStart=/usr/local/bin/prometheus/prometheus --config.file=/usr/local/bin/prometheus/prometheus.yml
+      ExecStart={{ destination_path }}/prometheus --config.file={{ destination_path }}/prometheus.yml
 
       [Install]
       WantedBy=multi-user.target
+  notify: restart prometheus service
 
-- name: service always restarted
+- name: start prometheus service
   ansible.builtin.systemd:
     name: prometheus
-    state: restarted
-    enabled: true
-    daemon_reload: yes
+    state: started
